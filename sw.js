@@ -44,45 +44,18 @@ self.addEventListener('activate', evt =>{
 self.addEventListener('fetch', evt=>{                                   //Call-back function takes as a parameter de event object with information about the fetch request.. 
     //console.log('fetch event has occured', evt)                         //log the event object everytime there is some kind of fetch-event.             
     
-    const req = evt.request;
-    const url = new URL(req.url);                                       //Get the URL out of the request
-
-    if(url.orgin == location.origin){                                   //If we fetch the URL from our own site.
-        evt.respondWith(cacheFirst(req));
-    }else {
-        evt.respondWith(networkFirst(req));
-    }
-
     /* 
     Intercept any fetch request for assets/resources and check to see 
     if those resources/assets match with what is in our cache. 
     If it does, return the cached resource to the app.
     If it doesn't match your fetch request, continue trying to fetch data from server. 
     */
-    // evt.respondWith(                                                    //Pause the fetch event, respond with our own custome event.//Response from our own cash, don't go all the way to the server. 
-    //     caches.match(evt.request).then(cacheRes => {                    //Look in our own caches (form assets) and see if you match something that has this event.request.             
-    //     //Cash response
-    //         //Return the response that we stored in the cache to the browsor.
-    //         //Or return the actual fetch request from the server. 
-    //         return cacheRes || fetch(evt.request);                               
-    //     })
-    // );
-
-    async function cacheFirst(req) {
-        const cachedResponse = await caches.match(req);
-        return cachedResponse || fetch(req);
-    }
-
-    //Probeer eerst het network te bereiken. 
-    async function networkFirst(req) {
-        const cache = await caches.open('news-dynamic');                //Get a new cache. 
-
-        try {
-            const res = await fetch(req);                               //Go to the network and fetch news.
-            cache.put(req, res.clone());                                //Store the fetch in the cache. Clone the result. 
-            return res;
-        } catch (error){                                                //Als het niet lukt om naar het netwerk te gaan (offline)
-            return await cache.match(req);                              
-        }
-    }
+    evt.respondWith(                                                    //Pause the fetch event, respond with our own custome event.//Response from our own cash, don't go all the way to the server. 
+        caches.match(evt.request).then(cacheRes => {                    //Look in our own caches (form assets) and see if you match something that has this event.request.             
+        //Cash response
+            //Return the response that we stored in the cache to the browsor.
+            //Or return the actual fetch request from the server. 
+            return cacheRes || fetch(evt.request);                               
+        })
+    );
 });
