@@ -53,21 +53,6 @@ self.addEventListener('fetch', evt=>{                                   //Call-b
         evt.respondWith(networkFirst(req));
     }
 
-    /* 
-    Intercept any fetch request for assets/resources and check to see 
-    if those resources/assets match with what is in our cache. 
-    If it does, return the cached resource to the app.
-    If it doesn't match your fetch request, continue trying to fetch data from server. 
-    */
-    // evt.respondWith(                                                    //Pause the fetch event, respond with our own custome event.//Response from our own cash, don't go all the way to the server. 
-    //     caches.match(evt.request).then(cacheRes => {                    //Look in our own caches (form assets) and see if you match something that has this event.request.             
-    //     //Cash response
-    //         //Return the response that we stored in the cache to the browsor.
-    //         //Or return the actual fetch request from the server. 
-    //         return cacheRes || fetch(evt.request);                               
-    //     })
-    // );
-
     async function cacheFirst(req) {
         const cachedResponse = await caches.match(req);
         return cachedResponse || fetch(req);
