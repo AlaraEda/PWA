@@ -8,9 +8,11 @@ if('serviceWorker' in navigator){               //Navigator is an object that re
     .catch((err)=> console.log("service worker not registered", err))  //Of Errors worden opgevangen.
 }
 
-const main = document.querySelector('main');
+const projects = document.querySelector('projects');
+const tag = document.querySelector('tag');
 
 window.addEventListener('load', e => {
+    updatetags();
     updateNews();
 });
 
@@ -21,14 +23,25 @@ async function updateNews() {
         json = await res.json();   
     } catch (error) {
         json = await localforage.getItem('projects');
-    }
-    
-    console.log(json)
-                              
+    }     
 
-    main.innerHTML = json.projects.map(createArticle).join('\n');           //Plek waar ik de opgehaalde Json data zie.
+    projects.innerHTML = json.projects.map(createArticle).join('\n');           //Plek waar ik de opgehaalde Json data zie.
                                                                             //Join houd in dat je een nieuwe aanmaakt. Ik roep de template beneden op.
 }
+
+//NetwerkOnly
+async function updatetags() {
+    let json
+    try {
+        const res = await fetch(`https://cmgt.hr.nl:8000/api/projects/tags`);
+        json = await res.json();   
+        tag.innerHTML = json.tags.map(tags).join('\n');                   //Plek waar ik de opgehaalde Json data zie.
+                                                                          //Join houd in dat je een nieuwe aanmaakt. Ik roep de template beneden op.
+    } catch (error) {
+        tag.innerHTML = offline();                                        //Voor als je geen wifi hebt. 
+    }                             
+}
+
 
 function createArticle(project){
     return `
@@ -46,6 +59,22 @@ function createArticle(project){
             </div>
         </a>
       </div>
+    </div>
+    `;
+}
+
+function tags(tags){
+    return `
+    <div>
+    ${tags}
+    </div>
+    `;
+}
+
+function offline(offline){
+    return `
+    <div>
+    You are Offline, have no WIFI and NO Tags. 
     </div>
     `;
 }

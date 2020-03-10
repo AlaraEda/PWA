@@ -25,68 +25,73 @@ const assets = [                                                        //Possib
 
 //Install service worker event handler
 self.addEventListener('install', evt => {
-  //console.log("Service worker has been installed or re-installed to the browsor, maybe bc a file has changed");
+  // console.log("Service worker has been installed or re-installed to the browsor, maybe bc a file has changed");
 
-  //Wacht totdat alles is opgeslagen in de cache. 
-  //Wacht totdat promise is resolved before finishing the installation event. 
+  // Wacht totdat alles is opgeslagen in de cache. 
+  // Wacht totdat promise is resolved before finishing the installation event. 
   evt.waitUntil(
-    caches.open(staticCacheName).then((cache) => {          //Open a cach with the name 'site-static' if it exists, if it doesn't the browsor will create one.
-      //If cash has been opened: Add items to cache
+    caches.open(staticCacheName).then((cache) => {                    //Open a cach with the name 'site-static' if it exists, if it doesn't the browsor will create one.
+      // If cash has been opened: Add items to cache
       console.log('caching shell assets');
-      cache.addAll(assets);                                 //Add array of items to cache. Reach out to the server & grab all the resources in the array.
+      cache.addAll(assets);                                           //Add array of items to cache. Reach out to the server & grab all the resources in the array.
     })
   );
 });
 
 // activate service worker/event
 self.addEventListener('activate', evt =>{
-    //console.log('service worker has been activated');
-    //indexedDB.open('ALARA')                                   //Database word aangemaakt en geoepend. 
+    // console.log('service worker has been activated');
+    // indexedDB.open('ALARA')                                        //Database word aangemaakt en geoepend. 
 });
 
 //Fetch Events, luister naar wanneer de browsor iets wil op halen van de server;
-self.addEventListener('fetch', evt=> {                                   //Call-back function takes as a parameter de event object with information about the fetch request.. 
-    //console.log('fetch event has occured', evt)                         //log the event object everytime there is some kind of fetch-event.             
-   
-    /* 
-    Intercept any fetch request for assets/resources and check to see 
-    if those resources/assets match with what is in our cache. 
-    If it does, return the cached resource to the app.
-    If it doesn't match your fetch request, continue trying to fetch data from server. 
-    */
-   let fetchUrl = 'https://cmgt.hr.nl:8000/api/projects/'
-   if (evt.request.url == fetchUrl){
+self.addEventListener('fetch', evt=> {                                //Call-back function takes as a parameter de event object with information about the fetch request.. 
+  //console.log('fetch event has occured', evt)                         //log the event object everytime there is some kind of fetch-event.             
+  
+  /* 
+  Intercept any fetch request for assets/resources and check to see 
+  if those resources/assets match with what is in our cache. 
+  If it does, return the cached resource to the app.
+  If it doesn't match your fetch request, continue trying to fetch data from server. 
+  */
+
+  let fetchUrl = 'https://cmgt.hr.nl:8000/api/projects/'
+
+  //NetwerkFirstThenCache, je slaat hier je projecten op in LocalForage.
+  if (evt.request.url == fetchUrl){                                      //Als de request een Url is, en die hetzelfde is als fetchUrl
       evt.respondWith(
-        networkFirst(fetchUrl)                                            //Voer alleen uit voor de Fetch-URL.  
+        networkFirst(fetchUrl)                                           //Voer alleen uit voor de networkFirst uit. 
       )
-   }
-   else {
-      evt.respondWith(                                                    //Pause the fetch event, respond with our own custome event.//Response from our own cash, don't go all the way to the server. 
-      caches.match(evt.request).then(cacheRes => {                    //Look in our own caches (form assets) and see if you match something that has this event.request.             
+  }
+
+  //CacheFirstThenNetwork, je slaat hier je overige data op in je cache
+  else {
+    evt.respondWith(                                                     //Pause the fetch event, respond with our own custome event.//Response from our own cash, don't go all the way to the server. 
+      caches.match(evt.request).then(cacheRes => {                       //Look in our own caches (form assets) and see if you match something that has this event.request.             
       //Cash response
-          //Return the response that we stored in the cache to the browsor.
-          //Or return the actual fetch request from the server. 
-          return cacheRes || fetch(evt.request);                               
+        //Return the response that we stored in the cache to the browsor.
+        //Or return the actual fetch request from the server. 
+        return cacheRes || fetch(evt.request);                               
       })
-   );
-  }    
+    );
+  }
+
 });
 
-
+//NetworkFirstThenCache
 async function networkFirst(req){
+  //Kijk of je het netwerk kan bereiken
   try {
-    const res = await fetch(req);                             // Const want we gaan het niet meer aanpassen. 
-    const data = await res.clone().json();                            // In de variabele ophalen zit de json. 
+    const res = await fetch(req);                                       // Const want we gaan het niet meer aanpassen. 
+    const data = await res.clone().json();                              // In de variabele res zit de json. 
 
-    //console.log(data); 
-    
-    localforage.setItem('projects', data);                  //Zet de data die je krijgt in database
+    localforage.setItem('projects', data);                              //Zet de data die je krijgt in je localforage-database
     return res;
 
+  //Kan je niet netwerk bereiken, want geen internet, haal data op uit de localforage-cache. 
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     const storage = await localforage.getItem('projects');
-    return new Response(storage)             //Pak de data van localforage van projects. Dit is json.
+    return new Response(storage)                                        //Pak de data van localforage van projects. Dit is json.
   }
 }
-
