@@ -6,6 +6,9 @@ Hierdoor kan de app zonder wifi werken.
 
 * Using cashed assets results in a much quicker loading time, even if you do have (verbinding) to the internet.
 */
+
+
+importScripts('/js/localforage.js')
 const staticCacheName = 'site-static';                                  //Static recources/The shell resources.
 const assets = [                                                        //Possible request that users can make to the PWA;
   '/',
@@ -38,24 +41,52 @@ self.addEventListener('install', evt => {
 // activate service worker/event
 self.addEventListener('activate', evt =>{
     //console.log('service worker has been activated');
+    //indexedDB.open('ALARA')                                   //Database word aangemaakt en geoepend. 
 });
 
 //Fetch Events, luister naar wanneer de browsor iets wil op halen van de server;
-self.addEventListener('fetch', evt=>{                                   //Call-back function takes as a parameter de event object with information about the fetch request.. 
+self.addEventListener('fetch', evt=> {                                   //Call-back function takes as a parameter de event object with information about the fetch request.. 
     //console.log('fetch event has occured', evt)                         //log the event object everytime there is some kind of fetch-event.             
-    
+   
     /* 
     Intercept any fetch request for assets/resources and check to see 
     if those resources/assets match with what is in our cache. 
     If it does, return the cached resource to the app.
     If it doesn't match your fetch request, continue trying to fetch data from server. 
     */
-    evt.respondWith(                                                    //Pause the fetch event, respond with our own custome event.//Response from our own cash, don't go all the way to the server. 
-        caches.match(evt.request).then(cacheRes => {                    //Look in our own caches (form assets) and see if you match something that has this event.request.             
-        //Cash response
-            //Return the response that we stored in the cache to the browsor.
-            //Or return the actual fetch request from the server. 
-            return cacheRes || fetch(evt.request);                               
-        })
-    );
+   let fetchUrl = 'https://cmgt.hr.nl:8000/api/projects/'
+   if (evt.request.url == fetchUrl){
+      evt.respondWith(
+        networkFirst(fetchUrl)                                            //Voer alleen uit voor de Fetch-URL.  
+      )
+   }
+   else {
+      evt.respondWith(                                                    //Pause the fetch event, respond with our own custome event.//Response from our own cash, don't go all the way to the server. 
+      caches.match(evt.request).then(cacheRes => {                    //Look in our own caches (form assets) and see if you match something that has this event.request.             
+      //Cash response
+          //Return the response that we stored in the cache to the browsor.
+          //Or return the actual fetch request from the server. 
+          return cacheRes || fetch(evt.request);                               
+      })
+   );
+  }    
 });
+
+
+async function networkFirst(req){
+  try {
+    const res = await fetch(req);                             // Const want we gaan het niet meer aanpassen. 
+    const data = await res.clone().json();                            // In de variabele ophalen zit de json. 
+
+    //console.log(data); 
+    
+    localforage.setItem('projects', data);                  //Zet de data die je krijgt in database
+    return res;
+
+  } catch (error) {
+    console.error(error);
+    const storage = await localforage.getItem('projects');
+    return new Response(storage)             //Pak de data van localforage van projects. Dit is json.
+  }
+}
+

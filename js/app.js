@@ -1,3 +1,4 @@
+
 //Support the browsor service workers?
 if('serviceWorker' in navigator){               //Navigator is an object that represents the browsor
     navigator.serviceWorker.register('sw.js')   //Register service worker. 
@@ -14,12 +15,16 @@ window.addEventListener('load', e => {
 });
 
 async function updateNews() {
-    const res = await fetch(`https://cmgt.hr.nl:8000/api/projects/`);
-    const json = await res.json();
+    let json
+    try {
+        const res = await fetch(`https://cmgt.hr.nl:8000/api/projects/`);
+        json = await res.json();   
+    } catch (error) {
+        json = await localforage.getItem('projects');
+    }
+    
     console.log(json)
-    // res.then(data => {                      
-    //     console.log(data)
-    // });                                         
+                              
 
     main.innerHTML = json.projects.map(createArticle).join('\n');           //Plek waar ik de opgehaalde Json data zie.
                                                                             //Join houd in dat je een nieuwe aanmaakt. Ik roep de template beneden op.
