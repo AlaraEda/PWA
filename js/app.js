@@ -10,11 +10,16 @@ if('serviceWorker' in navigator){               //Navigator is an object that re
 
 const projects = document.querySelector('projects');
 const tag = document.querySelector('tag');
+const status = document.getElementById('status');
 
 window.addEventListener('load', e => {
+    updateOnlineStatus();
     updatetags();
     updateNews();
 });
+
+window.addEventListener('online',  updateOnlineStatus);
+window.addEventListener('offline',  updateOnlineStatus);
 
 async function updateNews() {
     let json
@@ -78,3 +83,10 @@ function offline(offline){
     </div>
     `;
 }
+
+function updateOnlineStatus(event) {
+    var condition = navigator.onLine ? "online" : "offline";
+
+    status.className = condition;     
+    status.innerHTML = condition.toUpperCase();
+  }
