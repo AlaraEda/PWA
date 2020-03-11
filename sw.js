@@ -15,6 +15,7 @@ const assets = [                                                        //Possib
   '/index.html',
   '/js/app.js',
   '/js/ui.js',
+  '/js/localforage.js',
   '/js/materialize.min.js',
   '/css/styles.css',
   '/css/materialize.min.css',

@@ -1,3 +1,5 @@
+// importScripts('/js/localforage.js')
+
 //Support the browsor service workers?
 if('serviceWorker' in navigator){               //Navigator is an object that represents the browsor
     navigator.serviceWorker.register('sw.js')   //Register service worker. 
@@ -36,6 +38,12 @@ async function updatetags() {
 }
 
 //Show Projecten
+/*
+Promise: Het laat toe om handlers te associëren met het eventuele succes of falen van een asynchrone actie. 
+Dit laat asynchrone methoden toe om waarden terug te geven zoals synchrone methoden:
+in plaats van de uiteindelijke waarde geeft een asynchrone methode een promise (belofte) 
+terug die in de toekomst een waarde zal hebben.
+*/
 async function updateNews() {
     let json
     try {
