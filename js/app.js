@@ -50,8 +50,7 @@ async function updatetags() {
 
 function createArticle(project){
     return `
-    <div class="row">
-      <div class="col s12 m6">
+
         <a href="${project.url}">
             <div class="card">
                 <div class="card-image">
@@ -63,15 +62,14 @@ function createArticle(project){
                 </div>
             </div>
         </a>
-      </div>
-    </div>
+
     `;
 }
 
 function tags(tags){
     return `
     <div>
-    ${tags}
+       ${tags}
     </div>
     `;
 }

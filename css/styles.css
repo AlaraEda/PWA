@@ -21,6 +21,13 @@ nav .sidenav-trigger{
   margin: 0;
 }
 
+tag {
+  background-color: #cdf5f7;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
 /* recipe styles */
 .recipes{
   margin-top: 20px;
