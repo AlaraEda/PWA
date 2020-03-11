@@ -71,6 +71,7 @@ self.addEventListener('fetch', evt=> {                                //Call-bac
   }
 
   //CacheFirstThenNetwork, je slaat hier je overige data op in je cache
+  //Onderdelen van de app shell worden altijd eerst van uit de cache geladen. 
   else {
     evt.respondWith(                                                     //Pause the fetch event, respond with our own custome event.//Response from our own cash, don't go all the way to the server. 
       caches.match(evt.request).then(cacheRes => {                       //Look in our own caches (form assets) and see if you match something that has this event.request.             
@@ -86,7 +87,7 @@ self.addEventListener('fetch', evt=> {                                //Call-bac
 
 //NetworkFirstThenCache
 async function networkFirst(req){
-  //Kijk of je het netwerk kan bereiken
+  //Kijk of je het netwerk kan bereiken, laad data altijd eerst in vanuit de API. 
   try {
     const res = await fetch(req);                                       // Const want we gaan het niet meer aanpassen. 
     const data = await res.clone().json();                              // In de variabele res zit de json. 
