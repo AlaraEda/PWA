@@ -52,7 +52,7 @@ self.addEventListener('activate', evt =>{
 });
 
 //Fetch Events, luister naar wanneer de browsor iets wil op halen van de server;
-self.addEventListener('fetch', evt=> {                                //Call-back function takes as a parameter de event object with information about the fetch request.. 
+self.addEventListener('fetch', evt=> {                                  //Call-back function takes as a parameter de event object with information about the fetch request.. 
   //console.log('fetch event has occured', evt)                         //log the event object everytime there is some kind of fetch-event.             
   
   /* 

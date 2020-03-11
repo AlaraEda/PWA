@@ -20,7 +20,7 @@ window.addEventListener('load', e => {
     updateNews();
 });
 
-window.addEventListener('online',  updateOnlineStatus);
+window.addEventListener('online',   updateOnlineStatus);
 window.addEventListener('offline',  updateOnlineStatus);
 
 //NetwerkOnly voor tags. 
@@ -33,6 +33,7 @@ async function updatetags() {
         tag.innerHTML = json.tags.map(tags).join('\n');                   //Plek waar ik de opgehaalde Json data zie.
                                                                           //Join houd in dat je een nieuwe aanmaakt. Ik roep de template beneden op.
     } catch (error) {
+        console.log("Hier bij offline?")
         tag.innerHTML = offline();                                        //Voor als je geen wifi hebt. 
     }                             
 }
@@ -91,9 +92,7 @@ function offline(offline){
 function updateOnlineStatus(event) {
     var condition = navigator.onLine ? "online" : "offline";
 
-    if ("online"){
-        updatetags();
-    }
+    updatetags();
 
     status.className = condition;     
     status.innerHTML = condition.toUpperCase();
