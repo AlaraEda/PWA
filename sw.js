@@ -41,7 +41,13 @@ self.addEventListener('install', evt => {
 // activate service worker/event
 self.addEventListener('activate', evt =>{
     // console.log('service worker has been activated');
-    // indexedDB.open('ALARA')                                        //Database word aangemaakt en geoepend. 
+    evt.waitUntil(
+      caches.keys().then(keys => {
+        return Promise.all(keys
+            .filter(key => key !== staticCacheName)
+          .map(key => caches.delete(key)))
+      })
+    )
 });
 
 //Fetch Events, luister naar wanneer de browsor iets wil op halen van de server;
@@ -61,7 +67,7 @@ self.addEventListener('fetch', evt=> {                                //Call-bac
   if (evt.request.url == fetchUrl){                                      //Als de request een Url is, en die hetzelfde is als fetchUrl
       evt.respondWith(
         networkFirst(fetchUrl)                                           //Voer alleen uit voor de networkFirst uit. 
-      )
+      );
   }
 
   //CacheFirstThenNetwork, je slaat hier je overige data op in je cache
