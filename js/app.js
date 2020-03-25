@@ -89,11 +89,12 @@ function offline(offline){
     `;
 }
 
+//Wisselen tussen online of online staan. 
 function updateOnlineStatus(event) {
     var condition = navigator.onLine ? "online" : "offline";
 
-    updatetags();
+    updatetags();                                               //Laat tags ziena ls je offline bent. 
 
     status.className = condition;     
-    status.innerHTML = condition.toUpperCase();
+    status.innerHTML = condition.toUpperCase();                 //Schrijf offline/online in hoofdletters. 
   }

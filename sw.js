@@ -91,9 +91,9 @@ async function networkFirst(req){
   //Kijk of je het netwerk kan bereiken, laad data altijd eerst in vanuit de API. 
   try {
     const res = await fetch(req);                                       // Const want we gaan het niet meer aanpassen. 
-    const data = await res.clone().json();                              // In de variabele res zit de json. 
+    const data = await res.clone().json();                              // In de variabele res zit de json. Clone die data. Want de originele data raakt het programma kwijt, nadat het een keer gebruikt is.
 
-    localforage.setItem('projects', data);                              //Zet de data die je krijgt in je localforage-databas
+    localforage.setItem('projects', data);                              //Zet de data die je krijgt in je localforage-database
     return res;
 
   //Kan je niet netwerk bereiken, want geen internet, haal data op uit de localforage-cache. 

@@ -32,3 +32,5 @@ Om versiebeheer werkend te krijgen zou je er dus voor moeten zorgen dat er een v
 In mijn indexedDB zitten al mijn projecten in een rij. Het is beter als ik dit verdeel over meerdere rijen
 en daardoor heen loop. Want als ik dat doe kan ik doormiddel van de id van elk project, op een project klikken
 en doorgestuurd worden naar de detail-pagina van dat project. 
+
+Project Werkt door op Lifeserver te klikken!
