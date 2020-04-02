@@ -34,3 +34,19 @@ en daardoor heen loop. Want als ik dat doe kan ik doormiddel van de id van elk p
 en doorgestuurd worden naar de detail-pagina van dat project. 
 
 Project Werkt door op Lifeserver te klikken!
+
+-----------------------------------------------------------------------------------------
+Manifest.json
+Provides info about app to the browsor: 
+- Name of the app
+- Homescreen Icon for mobile
+- Color Theme's
+- Etc.
+
+Native Apps:
+Houd in dat je toegang kan krijgen tot smart phone features zoals bijvoorbeeld de camera. 
+Kan je vinden in de app  store. Houd in dat je de content van een app kan gebruiken zonder wifi. 
+
+Hulpmiddelen: https://www.youtube.com/watch?v=4XT23X0Fjfk&list=PL4cUxeGkcC9gTxqJBcDmoi5Q2pzDusSL7
+
+![alt text](https://github.com/AlaraEdda/PWA/blob/Finished/img/PWI%20uitleg%20instructies.jpeg "PWA UITLEG")
